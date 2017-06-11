@@ -92,6 +92,8 @@ void DisplayNextDigit() {
 	} 
 	else
 	{
+			// Turn Off Previous Segments
+			PORTD=0xff;
 			// Check & send dp segment ( as stated in MSB ... dp2 dp1 dp0)
 			if ( digits[3] & ( 1 << Digit	))
 			PORTA &= (~ (1<<PA1))   ; // turn on dp on digit

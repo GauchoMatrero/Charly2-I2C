@@ -61,18 +61,18 @@ extern "C" {
 // #include <Arduino.h>
 
 // define storage used for buffering data
-const int Ndigits = 3;
-const int Nsegments = 7;
-int digits[Ndigits+1];
+const int Ndigits = 3;     // Number of Led Digits
+const int Nsegments = 7;   // Number of segments dp is th 8th one
+int digits[Ndigits+1];     // Array of digits BCD  MSB is Dp position ( bitmap )
 
 // define multiplexer
 Charly Mpx ( Ndigits, Nsegments ) ;
 // Display multiplexer **********************************************
-char digit = 0;
+
 void DisplayNextDigit() {
-	static int Digit = 0;
-	static int Segment = 0;
-	static int Dp =false;
+	static char Digit = 0;
+	static char Segment = 0;
+	static bool Dp =false;
 	
 	//write Digit outs ( mask unused outs )
 	PORTB =  (PORTB & 0b11111000)| Mpx.GetDigit(Digit);
@@ -84,6 +84,7 @@ void DisplayNextDigit() {
 		//write Segment outputs
 		PORTD = ~Mpx.GetSegment(digits[Digit], Segment, Digit);
 		Segment++;
+		// last segment, time to process dp
 		if (Segment >= Nsegments) {
 				Dp=true;
 
@@ -99,12 +100,11 @@ void DisplayNextDigit() {
 			// reset digit counter stuff
 			Segment = 0;
 			Digit++;
-			// Last Segment ? restart digit count & set Dp processing
+			// Last Digit ? restart digit count 
 			if ( Digit >= Ndigits )
 			{
 				Digit = 0;
 			}
-			
 	}
 }
 

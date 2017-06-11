@@ -85,22 +85,8 @@ void DisplayNextDigit() {
 		PORTD = ~Mpx.GetSegment(digits[Digit], Segment, Digit);
 		Segment++;
 		if (Segment >= Nsegments) {
-		///*
-			//unsigned int testval0 = ( 1 << digit);
-			//unsigned int testval1 = digits[3] & ( 1 << digit);
-			//unsigned int testval2 = (~ (1<<pa1));
-			//unsigned int testval3 = porta;
-			//unsigned int testval4 = porta & (~ (1<<pa1));
-	//*/
-			// reset digit counter stuff
-			Segment = 0;
-			Digit++;
-			// Last Segment ? restart digit count & set Dp processing
-			if ( Digit >= Ndigits )
-			{
-				Digit = 0;
 				Dp=true;
-			}
+
 		}
 	} 
 	else
@@ -110,6 +96,14 @@ void DisplayNextDigit() {
 			PORTA &= (~ (1<<PA1))   ; // turn on dp on digit
 			// process segments on next interrupt
 			Dp=false;
+			// reset digit counter stuff
+			Segment = 0;
+			Digit++;
+			// Last Segment ? restart digit count & set Dp processing
+			if ( Digit >= Ndigits )
+			{
+				Digit = 0;
+			}
 			
 	}
 }
